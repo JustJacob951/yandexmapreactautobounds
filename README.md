@@ -1,2 +1,3 @@
-# yandexmapreactautobounds
-Test auto bounds yandex map react
+Set bounds yandex map react
+
+doc yandex map react - https://react-yandex-maps.now.sh/
