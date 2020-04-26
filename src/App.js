@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import { YMaps, Map } from 'react-yandex-maps';
 
 const coordinates = [
   [55.751371, 37.520301],
@@ -12,19 +12,29 @@ class App extends React.Component{
     super(props);
     this.ymap = React.createRef();
   }
-  handleMapLoad = ymaps => {
-    console.log(ymaps);
-    // console.log(this.ymap.current.geoObjects.getBounds());  this always null, problem could be in Placemarks or need load special module
-    // this.ymap.current.setBounds(this.ymap.current.geoObjects.getBounds()); //this line should define correct map bounds depends of current marks
 
+  handleMapLoad = ymaps => {
+    const collection = new ymaps.GeoObjectCollection();
+    collection.add(new ymaps.Placemark(coordinates[0]));
+    collection.add(new ymaps.Placemark(coordinates[1]));
+    collection.add(new ymaps.Placemark(coordinates[2]));
+    this.ymap.current.geoObjects.add(collection);
+    this.ymap.current.setBounds(collection.getBounds());
   }
+
   render() {
     return (
      <div className="App">
        <header className="App-header">
          <YMaps>
-           <Map onLoad={(ymaps) => this.handleMapLoad(ymaps)} instanceRef={this.ymap} width="100vw" height="100vh" defaultState={{ center: [25.75, 37.57], zoom: 5 }} >
-             {coordinates.map((coordinate,i) => <Placemark key={i} geometry={coordinate} />)}
+           <Map
+               onLoad={(ymaps) => this.handleMapLoad(ymaps)}
+               instanceRef={this.ymap}
+               width="100vw"
+               height="100vh"
+               defaultState={{ center: [25.75, 37.57], zoom: 5 }}
+               modules={["GeoObjectCollection", "Placemark"]}
+           >
            </Map>
          </YMaps>
        </header>
